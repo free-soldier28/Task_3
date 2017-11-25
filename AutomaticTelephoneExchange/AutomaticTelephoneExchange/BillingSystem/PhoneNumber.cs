@@ -5,7 +5,8 @@ namespace AutomaticTelephoneExchange.BillingSystem
     public class PhoneNumber
     {
         public Guid Id { get; private set; }
-        private int Number { get; set; }
+        public int Number { get; private set; }
+        public bool FreeStatus { get; set; } = true;
 
         public PhoneNumber(int name)
         {
@@ -17,5 +18,11 @@ namespace AutomaticTelephoneExchange.BillingSystem
         {
             return this;
         }
+
+        public void ChangeFreeStatus(bool status)
+        {
+            FreeStatus = status;
+        }
+
     }
 }

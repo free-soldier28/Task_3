@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutomaticTelephoneExchange.Enum;
 
 namespace AutomaticTelephoneExchange.BillingSystem
@@ -8,14 +10,6 @@ namespace AutomaticTelephoneExchange.BillingSystem
         public List<Contract> contracts = new List<Contract>();
         public List<CallDetailing> callDetailing = new List<CallDetailing>();
 
-        public List<Abonent> abonents = new List<Abonent>
-        {
-            new Abonent("Чижиков А.И", "3210781M064PB6"),
-            new Abonent("Петров Ю.Д", "4830781P028KN3"),
-            new Abonent("Сериков И.Г", "3212781G013СP8"),
-            new Abonent("Иванова Л.Н", "5014602J064AB1"),
-            new Abonent("Бубенцов Ю.Б.", "5730781R064PB0")
-        };
 
         public List<TariffOffer> tariffs = new List<TariffOffer>
         {
@@ -33,6 +27,17 @@ namespace AutomaticTelephoneExchange.BillingSystem
             new PhoneNumber(54113),
             new PhoneNumber(57160)
         };
+
+        public Guid GetIdFreePhoneNumber()
+        {
+            return phoneNumbers.Where(x => x.FreeStatus == true).Select(x=>x.Id).FirstOrDefault();
+        }
+
+        public void SetFreePhoneNumber(Guid _id)
+        {
+            var terminal = phoneNumbers.Where(x => x.Id == _id).FirstOrDefault();
+            terminal.ChangeFreeStatus(false);
+        }
 
     }
 }

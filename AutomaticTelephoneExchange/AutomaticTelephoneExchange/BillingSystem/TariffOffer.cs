@@ -6,7 +6,7 @@ namespace AutomaticTelephoneExchange.BillingSystem
     public class TariffOffer
     {
         public Guid Id {  get; private set; }
-        private Tariff Name { get; set; }
+        public Tariff Name { get; private set; }
         private double Price { get; set; }
 
         public TariffOffer(Tariff tariffName, double price)
