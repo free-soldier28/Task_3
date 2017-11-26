@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,12 +43,11 @@
   <ItemGroup>
     <Compile Include="BillingSystem\Abonent.cs" />
     <Compile Include="BillingSystem\CallDetailing.cs" />
-    <Compile Include="BillingSystem\Contract.cs" />
+    <Compile Include="ATE\Contract.cs" />
     <Compile Include="ATE\Port.cs" />
     <Compile Include="BillingSystem\BillingSystem.cs" />
     <Compile Include="Enum\CallStatus.cs" />
     <Compile Include="Enum\Tariff.cs" />
-    <Compile Include="BillingSystem\PhoneNumber.cs" />
     <Compile Include="BillingSystem\TariffOffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ATE\PhoneExchange.cs" />

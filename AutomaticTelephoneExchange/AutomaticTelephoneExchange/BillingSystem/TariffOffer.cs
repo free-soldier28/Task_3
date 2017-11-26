@@ -16,9 +16,5 @@ namespace AutomaticTelephoneExchange.BillingSystem
             Price = price;
         }
 
-        public TariffOffer GetTariffOffers()
-        {
-            return this;
-        }
     }
 }

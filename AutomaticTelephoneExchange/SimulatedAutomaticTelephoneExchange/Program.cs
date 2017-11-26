@@ -27,28 +27,42 @@ namespace SimulatedAutomaticTelephoneExchange
 
             Random random = new Random();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < abonents.Count - 1; i++)
             {
-                var Abonent = abonents[i];
-                Guid idFreePhoneNumber = bilingSystem.GetIdFreePhoneNumber(); //Возвращаем id первого свободного номера телефона из коллекции
+                var abonent = abonents[i];
+                
+                var freePort = phoneExchange.GetFreePort(); //Находим свободный порт
+                var freeTerminal = phoneExchange.GetFreeTerminal(freePort); //Находим свободный терминал
+                var _freePhoneNumber = phoneExchange.GetFreePhoneNumber(); //Находим свободный номер телефона
 
-                int randomNumberTarrid = random.Next(bilingSystem.tariffs.Count); //Рандомно возвращаем номер таррифа из коллекции
-                Guid IdRandomTariff = bilingSystem.tariffs[randomNumberTarrid].Id; //Возвращаем id рандомного тарифа
+                int _randomNumberTarrid = random.Next(bilingSystem.tariffs.Count); //Рандомно возвращаем номер таррифа из коллекции
+                var randomTariff = bilingSystem.tariffs[_randomNumberTarrid]; //Рандомно возвращаем тариф
 
                 int randomBalans = random.Next(0, 50); //Разновмно генерируем начальный баланс для абонента
 
-                Guid idFreeTerminal = phoneExchange.GetIdFreeTerminal(); //Возвращаем id свободного терминала
-                Guid idFreePort = phoneExchange.GetIdFreePort(); //Возвращаем id свободного порта АТС
+                //Заключение договора с клиентом
+                phoneExchange.contracts.Add(new Contract(abonent.Id, _freePhoneNumber, randomTariff.Id, randomBalans, freeTerminal.Id, freePort.Id));
 
-                //Заключение договоров с клиентами
-                bilingSystem.contracts.Add(new Contract(Abonent.Id, idFreePhoneNumber, IdRandomTariff, randomBalans, idFreeTerminal, idFreePort));
-                phoneExchange.SetFreeStatusPort(idFreePort);
-                phoneExchange.SetFreeStatusTerminal(idFreeTerminal);
-                bilingSystem.SetFreePhoneNumber(idFreePhoneNumber);
+                //Выдаем абоненту терминал и порт
+                freeTerminal.Port = freePort;
+                abonent.Terminal = freeTerminal;
 
-                string nameTarrif = bilingSystem.tariffs.Where(x => x.Id == IdRandomTariff).Select(z => z.Name).FirstOrDefault().ToString();
-                Console.WriteLine("Abonent " + Abonent.FIO + " concluded a contract for the tariff plan " + nameTarrif);
+                //Добавляем в коллеции АТС порт, телефон и номер абонента
+                phoneExchange.allocatedTerminals.Add(freePort, freeTerminal);
+                phoneExchange.allocatedPhoneNumber.Add(_freePhoneNumber, freeTerminal);
+
+                Console.WriteLine("Abonent " + abonent.FIO + " concluded a contract for the tariff plan " + randomTariff.Name);
             }
+
+            //Подключение к порту телефона абонентом
+            var randomNumberAbonent = random.Next(0, abonents.Count - 1);
+            var randomAbonent = abonents[randomNumberAbonent];
+            randomAbonent.ConnectTerminalToPort();
+
+            //Отключение от порта телефона абонентом
+            randomNumberAbonent = random.Next(0, abonents.Count - 1);
+            randomAbonent = abonents[randomNumberAbonent];
+            randomAbonent.DisconnectTerminalToPort();
 
             Console.ReadKey();
         }

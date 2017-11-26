@@ -1,24 +1,24 @@
 ﻿using System;
 
-namespace AutomaticTelephoneExchange.BillingSystem
+namespace AutomaticTelephoneExchange.ATE
 {
     public class Contract
     {
         public Guid Id { get; private set; }
         public Guid IdAbonent { get; private set; }
-        private Guid IdPhoneNumber { get; set; }
+        public string PhoneNumber { get; private set; }
         private Guid IdTariff { get; set; }
-        private Guid IdTerminal { get; set; }
-        private Guid IdPort { get; set; }
+        public Guid IdTerminal { get; private set; }
+        public Guid IdPort { get; private set; }
         private DateTime DateLastTariffChange { get; set; }
         private int Balance { get; set; }
 
 
-        public Contract(Guid _idAbonent, Guid _idPhoneNumber, Guid _idTariff, int _balance, Guid _idTerminal, Guid _idPort)
+        public Contract(Guid _idAbonent, string _phoneNumber, Guid _idTariff, int _balance, Guid _idTerminal, Guid _idPort)
         {
             Id = Guid.NewGuid();
             IdAbonent = _idAbonent;
-            IdPhoneNumber = _idPhoneNumber;
+            PhoneNumber = _phoneNumber;
             IdTariff = _idTariff;
             Balance = _balance;
             IdTerminal = _idTerminal;
@@ -50,7 +50,7 @@ namespace AutomaticTelephoneExchange.BillingSystem
             Balance = +_amountPayment;
         }
 
-        public Contract GetContract()
+        protected Contract GetContract()
         {
             return this;
         }

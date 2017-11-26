@@ -6,22 +6,11 @@ namespace AutomaticTelephoneExchange.ATE
     public class Terminal
     {
         public Guid Id { get; private set; }
-        public Guid IdPort { get; private set; }
-        public bool FreeStatus { get; private set; } = true;
+        public Port Port { get; set; }
 
         public Terminal()
         { 
             Id = Guid.NewGuid();
-        }
-
-        public void ConnectToPort(Guid _idPort)
-        {
-            IdPort = _idPort;
-        }
-
-        public void DisconnectToPort()
-        {
-            IdPort = Guid.Empty;
         }
 
         public void MakeCall(string _phoneNumber)
@@ -41,14 +30,5 @@ namespace AutomaticTelephoneExchange.ATE
             Console.WriteLine("Разговор окончен");
         }
 
-        public Terminal GetTerminal()
-        {
-            return this;
-        }
-
-        public void ChangeFreeStatus(bool status)
-        {
-            FreeStatus = status;
-        }
     }
 }
