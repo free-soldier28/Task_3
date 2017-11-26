@@ -38,15 +38,14 @@ namespace AutomaticTelephoneExchange.ATE
         }
 
         //Исходящий вызов
-        public void OutboundСall(string fio, string numberPhone)
+        public void OutboundСall(string fio, Abonent interlocutor)
         {
             if (ConnectionTerminal == true)
             {
-                StatusCall = true;
-
                 if (PortState != null)
                 {
-                    PortState($"Abonent " + fio + " talking with the subscriber " + numberPhone);
+                    PortState($"Abonent " + fio + " calls the subscriber " + interlocutor.FIO );
+                    IncomingCall(interlocutor); 
                 }
             }
             else
@@ -56,18 +55,27 @@ namespace AutomaticTelephoneExchange.ATE
         }
 
         //Входящий выхов
-        public void IncomingCall()
+        public void IncomingCall(Abonent interlocutor)
         {
-            if (StatusCall != true)
+            if (ConnectionTerminal == true)
             {
-                PortState($"Abonent disconnected the terminal from the port");
+                if (StatusCall == false)
+                {
+                    StatusCall = true;
+                    PortState($"Abonent " + interlocutor.FIO + " accepts a call");
+                }
+                else
+                {
+                    PortState($"Subscriber is busy.");
+                }
             }
             else
             {
-                PortState($"Subscriber is busy.");
+                PortState($"A call can not be made. The subscriber terminal is not connected to the port.");
             }
 
-        }
+
+         }
 
         //Закончить звонок
         public void EndCall(string fio)

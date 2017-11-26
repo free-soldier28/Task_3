@@ -67,10 +67,13 @@ namespace SimulatedAutomaticTelephoneExchange
             //Исходящий вызов абонента
             randomNumberAbonent = random.Next(0, abonents.Count - 1);
             randomAbonent = abonents[randomNumberAbonent];
+            var randomNumberInterlocutor = random.Next(0, abonents.Count - 1);
+            var randomInterlocutor = abonents[randomNumberInterlocutor];
 
-            var randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
-            string randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
-            randomAbonent.OutboundСall(randomPhoneNumber);
+            //var randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
+            //string randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
+
+            randomAbonent.OutboundСall(randomInterlocutor);
             Thread.Sleep(3000);
 
             //Завершение звонка

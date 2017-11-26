@@ -41,23 +41,18 @@ namespace AutomaticTelephoneExchange
             }
             
         }
-     
-        public void OutboundСall(string numberPhone)  //Исходящий вызов
+
+        public void OutboundСall(Abonent interlocutor)  //Исходящий вызов
         {
-            if (numberPhone != null)
+            if (interlocutor != null)
             {
-                Terminal.Port.OutboundСall(FIO, numberPhone);
+                Terminal.Port.OutboundСall(FIO, interlocutor);
             }
             else
             {
                 Console.WriteLine("A call can not be made. You did not enter a phone number.");
             }
 
-        }
-
-        public void IncomingCall() //Входящий вызов
-        {
-            Terminal.Port.IncomingCall();
         }
 
         public void EndCall() //Закончить звонок
