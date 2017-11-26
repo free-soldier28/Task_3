@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutomaticTelephoneExchange;
 using AutomaticTelephoneExchange.ATE;
 using AutomaticTelephoneExchange.BillingSystem;
 
 namespace SimulatedAutomaticTelephoneExchange
 {
-    class Program
+    public class Program
     {
+        public static PhoneExchange phoneExchange;
+        public static BillingSystem bilingSystem;
+
         static void Main(string[] args)
         {
+            int randomNumberAbonent;
+            Abonent randomAbonent;
+
             Console.OutputEncoding = Encoding.UTF8;
 
             List<Abonent> abonents = new List<Abonent>
@@ -22,8 +29,8 @@ namespace SimulatedAutomaticTelephoneExchange
                 new Abonent("Bubentsov Y.B.", "5730781R064PB0")
             };
 
-            PhoneExchange phoneExchange = new PhoneExchange();
-            BillingSystem bilingSystem = new BillingSystem();
+            phoneExchange = new PhoneExchange();
+            bilingSystem = new BillingSystem();
 
             Random random = new Random();
 
@@ -47,17 +54,26 @@ namespace SimulatedAutomaticTelephoneExchange
                 freeTerminal.Port = freePort;
                 abonent.Terminal = freeTerminal;
 
-                //Добавляем в коллеции АТС порт, телефон и номер абонента
-                phoneExchange.allocatedTerminals.Add(freePort, freeTerminal);
+                abonent.Terminal.Port.PortState += Show_Message; //Подписываемся на события порта абонета
+
+                //Добавляем в коллеции АТС терминал и номер абонента
                 phoneExchange.allocatedPhoneNumber.Add(_freePhoneNumber, freeTerminal);
+                phoneExchange.allocatedTerminals.Add(freePort, freeTerminal);
 
                 Console.WriteLine("Abonent " + abonent.FIO + " concluded a contract for the tariff plan " + randomTariff.Name);
+                abonent.ConnectTerminalToPort(); //Подключение к порту телефона абонентом
             }
 
-            //Подключение к порту телефона абонентом
-            var randomNumberAbonent = random.Next(0, abonents.Count - 1);
-            var randomAbonent = abonents[randomNumberAbonent];
-            randomAbonent.ConnectTerminalToPort();
+            //Исходящий вызов абонента
+            randomNumberAbonent = random.Next(0, abonents.Count - 1);
+            randomAbonent = abonents[randomNumberAbonent];
+
+            var randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
+            string randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
+            randomAbonent.OutboundСall(randomPhoneNumber);
+
+            //Завершение звонка
+            randomAbonent.EndCall();
 
             //Отключение от порта телефона абонентом
             randomNumberAbonent = random.Next(0, abonents.Count - 1);
@@ -65,6 +81,11 @@ namespace SimulatedAutomaticTelephoneExchange
             randomAbonent.DisconnectTerminalToPort();
 
             Console.ReadKey();
+        }
+
+        private static void Show_Message(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AutomaticTelephoneExchange.ATE
 
         public List<string> phoneNumbers = new List<string>
         {
-            "A51501", "51685", "51280","52889", "54113", "57160"
+            "51501", "51685", "51280","52889", "54113", "57160"
         };
 
         public List<Contract> contracts = new List<Contract>();
@@ -83,15 +83,8 @@ namespace AutomaticTelephoneExchange.ATE
             return PhoneNumber;
         }
 
-        //public void ConnectTerminalToPort()
-        //{
-        //    Console.WriteLine("Abonent " + FIO + " connected the terminal to the port");
-        //}
-
-        //public void DisconnectTerminalToPort()
-        //{
-        //    Console.WriteLine("Abonent " + FIO + " disconnected the terminal from the port");
-        //}
 
     }
+
+
 }

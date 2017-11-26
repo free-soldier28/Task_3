@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BillingSystem\Abonent.cs" />
+    <Compile Include="Abonent.cs" />
     <Compile Include="BillingSystem\CallDetailing.cs" />
     <Compile Include="ATE\Contract.cs" />
     <Compile Include="ATE\Port.cs" />
