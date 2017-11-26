@@ -14,25 +14,25 @@ namespace AutomaticTelephoneExchange.ATE
         private int Balance { get; set; }
 
 
-        public Contract(Guid _idAbonent, string _phoneNumber, Guid _idTariff, int _balance, Guid _idTerminal, Guid _idPort)
+        public Contract(Guid idAbonent, string phoneNumber, Guid idTariff, int balance, Guid idTerminal, Guid idPort)
         {
             Id = Guid.NewGuid();
-            IdAbonent = _idAbonent;
-            PhoneNumber = _phoneNumber;
-            IdTariff = _idTariff;
-            Balance = _balance;
-            IdTerminal = _idTerminal;
-            IdPort = _idPort;
+            IdAbonent = idAbonent;
+            PhoneNumber = phoneNumber;
+            IdTariff = idTariff;
+            Balance = balance;
+            IdTerminal = idTerminal;
+            IdPort = idPort;
             DateLastTariffChange = DateTime.Now;
         }
 
-        public bool ChangeTariff(Guid _idTariff)
+        public bool ChangeTariff(Guid idTariff)
         {
             DateTime date = DateTime.Now.Date;
             
             if (date.Month != DateLastTariffChange.Month)
             {
-                IdTariff = _idTariff;
+                IdTariff = idTariff;
                 DateLastTariffChange = date;
 
                 Console.WriteLine("Тарифный план успешно измененю");
@@ -45,9 +45,9 @@ namespace AutomaticTelephoneExchange.ATE
             }
         }
 
-        public void UpBalans(int _amountPayment)
+        public void UpBalans(int amountPayment)
         {
-            Balance = +_amountPayment;
+            Balance = + amountPayment;
         }
 
         protected Contract GetContract()

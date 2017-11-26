@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Threading;
 using AutomaticTelephoneExchange;
 using AutomaticTelephoneExchange.ATE;
 using AutomaticTelephoneExchange.BillingSystem;
@@ -10,14 +10,11 @@ namespace SimulatedAutomaticTelephoneExchange
 {
     public class Program
     {
-        public static PhoneExchange phoneExchange;
-        public static BillingSystem bilingSystem;
-
         static void Main(string[] args)
         {
             int randomNumberAbonent;
             Abonent randomAbonent;
-
+            
             Console.OutputEncoding = Encoding.UTF8;
 
             List<Abonent> abonents = new List<Abonent>
@@ -29,8 +26,10 @@ namespace SimulatedAutomaticTelephoneExchange
                 new Abonent("Bubentsov Y.B.", "5730781R064PB0")
             };
 
-            phoneExchange = new PhoneExchange();
-            bilingSystem = new BillingSystem();
+            PhoneExchange phoneExchange = new PhoneExchange();
+            phoneExchange.CreatePorts(10);
+            phoneExchange.CreateTerminals(10);
+            BillingSystem bilingSystem = new BillingSystem();
 
             Random random = new Random();
 
@@ -40,28 +39,29 @@ namespace SimulatedAutomaticTelephoneExchange
                 
                 var freePort = phoneExchange.GetFreePort(); //Находим свободный порт
                 var freeTerminal = phoneExchange.GetFreeTerminal(freePort); //Находим свободный терминал
-                var _freePhoneNumber = phoneExchange.GetFreePhoneNumber(); //Находим свободный номер телефона
+                var freePhoneNumber = phoneExchange.GetFreePhoneNumber(); //Находим свободный номер телефона
 
-                int _randomNumberTarrid = random.Next(bilingSystem.tariffs.Count); //Рандомно возвращаем номер таррифа из коллекции
-                var randomTariff = bilingSystem.tariffs[_randomNumberTarrid]; //Рандомно возвращаем тариф
+                int randomNumberTarrid = random.Next(bilingSystem.tariffs.Count); //Рандомно возвращаем номер таррифа из коллекции
+                var randomTariff = bilingSystem.tariffs[randomNumberTarrid]; //Рандомно возвращаем тариф
 
                 int randomBalans = random.Next(0, 50); //Разновмно генерируем начальный баланс для абонента
 
                 //Заключение договора с клиентом
-                phoneExchange.contracts.Add(new Contract(abonent.Id, _freePhoneNumber, randomTariff.Id, randomBalans, freeTerminal.Id, freePort.Id));
+                phoneExchange.contracts.Add(new Contract(abonent.Id, freePhoneNumber, randomTariff.Id, randomBalans, freeTerminal.Id, freePort.Id));
 
                 //Выдаем абоненту терминал и порт
                 freeTerminal.Port = freePort;
                 abonent.Terminal = freeTerminal;
 
-                abonent.Terminal.Port.PortState += Show_Message; //Подписываемся на события порта абонета
-
                 //Добавляем в коллеции АТС терминал и номер абонента
-                phoneExchange.allocatedPhoneNumber.Add(_freePhoneNumber, freeTerminal);
+                phoneExchange.allocatedPhoneNumber.Add(freePhoneNumber, freeTerminal);
                 phoneExchange.allocatedTerminals.Add(freePort, freeTerminal);
 
                 Console.WriteLine("Abonent " + abonent.FIO + " concluded a contract for the tariff plan " + randomTariff.Name);
+                Thread.Sleep(1000);
+
                 abonent.ConnectTerminalToPort(); //Подключение к порту телефона абонентом
+                Thread.Sleep(1000);
             }
 
             //Исходящий вызов абонента
@@ -71,9 +71,11 @@ namespace SimulatedAutomaticTelephoneExchange
             var randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
             string randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
             randomAbonent.OutboundСall(randomPhoneNumber);
+            Thread.Sleep(3000);
 
             //Завершение звонка
             randomAbonent.EndCall();
+            Thread.Sleep(1000);
 
             //Отключение от порта телефона абонентом
             randomNumberAbonent = random.Next(0, abonents.Count - 1);
@@ -83,9 +85,5 @@ namespace SimulatedAutomaticTelephoneExchange
             Console.ReadKey();
         }
 
-        private static void Show_Message(string message)
-        {
-            Console.WriteLine(message);
-        }
     }
 }

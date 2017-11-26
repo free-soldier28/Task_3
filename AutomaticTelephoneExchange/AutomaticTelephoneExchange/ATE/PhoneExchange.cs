@@ -6,25 +6,27 @@ namespace AutomaticTelephoneExchange.ATE
 {
     public class PhoneExchange
     {
-        public List<Port> ports = new List<Port>
-        {
-            new Port(),
-            new Port(),
-            new Port(),
-            new Port(),
-            new Port(),
-            new Port()
-        };
+        public List<Port> ports = new List<Port>();
+        public List<Terminal> terminals = new List<Terminal>();
 
-        public List<Terminal> terminals = new List<Terminal>
+        public void CreatePorts(int countPorts)
         {
-            new Terminal(),
-            new Terminal(),
-            new Terminal(),
-            new Terminal(),
-            new Terminal(),
-            new Terminal()
-        };
+            for (int i = 0; i < countPorts; i++)
+            {
+                var port = new Port();
+                port.PortState += Show_Message;
+                ports.Add(port);
+            }
+        }
+
+        public void CreateTerminals(int countTermilals)
+        {
+            for (int i = 0; i < countTermilals; i++)
+            {
+                var terminal = new Terminal();
+                terminals.Add(terminal);
+            }
+        }
 
         public List<string> phoneNumbers = new List<string>
         {
@@ -39,6 +41,7 @@ namespace AutomaticTelephoneExchange.ATE
         {
             Port freePort = null;
             Port temp;
+
             foreach (var port in ports)
             {
                 temp = allocatedTerminals.Where(x => x.Key.Id == port.Id).Select(z=>z.Key).FirstOrDefault();
@@ -51,13 +54,15 @@ namespace AutomaticTelephoneExchange.ATE
             return freePort;
         }
 
-        public Terminal GetFreeTerminal(Port _port)
+        public Terminal GetFreeTerminal(Port port)
         {
             Terminal freeTerminal = null;
             Terminal temp;
+
             foreach (var terminal in terminals)
             {
-                temp = allocatedTerminals.Where(x => x.Key.Id == _port.Id).Select(z=>z.Value).FirstOrDefault();
+                temp = allocatedTerminals.Where(x => x.Key.Id == port.Id).Select(z=>z.Value).FirstOrDefault();
+
                 if (temp == null)
                 {
                     freeTerminal = terminal;
@@ -71,9 +76,11 @@ namespace AutomaticTelephoneExchange.ATE
         {
             string PhoneNumber = null;
             string temp;
+
             foreach (var phoneNumber in phoneNumbers)
             {
                 temp = allocatedPhoneNumber.Where(x => x.Key == phoneNumber).Select(z=>z.Key).FirstOrDefault();
+
                 if (temp == null)
                 {
                     PhoneNumber = phoneNumber;
@@ -83,7 +90,10 @@ namespace AutomaticTelephoneExchange.ATE
             return PhoneNumber;
         }
 
-
+        private static void Show_Message(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
 
 

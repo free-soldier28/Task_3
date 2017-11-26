@@ -11,12 +11,12 @@ namespace AutomaticTelephoneExchange.BillingSystem
         private DateTime TimeEndCall { get; set; }
 
 
-        public CallDetailing(Guid _idAbonent, Guid _idInterlocutor, DateTime _timeBegin, DateTime _timeEnd)
+        public CallDetailing(Guid idAbonent, Guid idInterlocutor, DateTime timeBegin, DateTime timeEnd)
         {
-            IdAbonent = _idAbonent;
-            IdInterlocutor = _idInterlocutor;
-            TimeBeginCall = _timeBegin;
-            TimeEndCall = _timeEnd;
+            IdAbonent = idAbonent;
+            IdInterlocutor = idInterlocutor;
+            TimeBeginCall = timeBegin;
+            TimeEndCall = timeEnd;
         }
 
     }

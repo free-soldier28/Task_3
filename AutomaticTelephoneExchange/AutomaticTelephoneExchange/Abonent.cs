@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using AutomaticTelephoneExchange.ATE;
 
 namespace AutomaticTelephoneExchange
@@ -11,11 +10,11 @@ namespace AutomaticTelephoneExchange
         private string PassportId { get; set; }
         public Terminal Terminal { get; set; }
         
-        public Abonent(string _fio, string _passportId)
+        public Abonent(string fio, string passportId)
         {
             Id = Guid.NewGuid();
-            FIO = _fio;
-            PassportId = _passportId;
+            FIO = fio;
+            PassportId = passportId;
         }
 
         public void ConnectTerminalToPort()
@@ -43,11 +42,11 @@ namespace AutomaticTelephoneExchange
             
         }
      
-        public void OutboundСall(string _numberPhone)  //Исходящий вызов
+        public void OutboundСall(string numberPhone)  //Исходящий вызов
         {
-            if (_numberPhone != null)
+            if (numberPhone != null)
             {
-                Terminal.Port.OutboundСall(FIO, _numberPhone);
+                Terminal.Port.OutboundСall(FIO, numberPhone);
             }
             else
             {

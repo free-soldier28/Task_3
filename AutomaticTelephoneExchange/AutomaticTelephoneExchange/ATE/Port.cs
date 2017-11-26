@@ -17,28 +17,28 @@ namespace AutomaticTelephoneExchange.ATE
             ConnectionTerminal = false;
         }
 
-        public void Connect(string _fio)
+        public void Connect(string fio)
         {
             ConnectionTerminal = true;
 
             if (PortState != null)
             {
-                PortState($"Abonent " + _fio + " connected the terminal to the port");
+                PortState($"Abonent " + fio + " connected the terminal to the port");
             }
         }
 
-        public void Disconnect(string _fio)
+        public void Disconnect(string fio)
         {
             ConnectionTerminal = false;
 
             if (PortState != null)
             {
-                PortState($"Abonent " + _fio + " disconnected the terminal from the port");
+                PortState($"Abonent " + fio + " disconnected the terminal from the port");
             }
         }
 
         //Исходящий вызов
-        public void OutboundСall(string _fio, string _numberPhone)
+        public void OutboundСall(string fio, string numberPhone)
         {
             if (ConnectionTerminal == true)
             {
@@ -46,7 +46,7 @@ namespace AutomaticTelephoneExchange.ATE
 
                 if (PortState != null)
                 {
-                    PortState($"Abonent " + _fio + " talking with the subscriber " + _numberPhone);
+                    PortState($"Abonent " + fio + " talking with the subscriber " + numberPhone);
                 }
             }
             else
@@ -70,15 +70,11 @@ namespace AutomaticTelephoneExchange.ATE
         }
 
         //Закончить звонок
-        public void EndCall(string _fio)
+        public void EndCall(string fio)
         {
             StatusCall = false;
-            PortState($"Abonent " + _fio + " the call ended.");
+            PortState($"Abonent " + fio + " the call ended.");
         }
 
-        public bool GetConnectionStatus()
-        {
-            return ConnectionTerminal;
-        }
     }
 }
