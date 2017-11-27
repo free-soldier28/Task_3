@@ -13,8 +13,13 @@ namespace SimulatedAutomaticTelephoneExchange
         static void Main(string[] args)
         {
             int randomNumberAbonent;
+            int randomNumberPhoneNumber;
+            string randomPhoneNumber;
+
+
             Abonent randomAbonent;
-            
+            Random random = new Random();
+
             Console.OutputEncoding = Encoding.UTF8;
 
             List<Abonent> abonents = new List<Abonent>
@@ -31,8 +36,6 @@ namespace SimulatedAutomaticTelephoneExchange
             phoneExchange.CreateTerminals(10);
             BillingSystem bilingSystem = new BillingSystem();
 
-            Random random = new Random();
-
             for (int i = 0; i < abonents.Count - 1; i++)
             {
                 var abonent = abonents[i];
@@ -47,15 +50,12 @@ namespace SimulatedAutomaticTelephoneExchange
                 int randomBalans = random.Next(0, 50); //Разновмно генерируем начальный баланс для абонента
 
                 //Заключение договора с клиентом
-                phoneExchange.contracts.Add(new Contract(abonent.Id, freePhoneNumber, randomTariff.Id, randomBalans, freeTerminal.Id, freePort.Id));
+                var contract = new Contract(abonent.Id, freePhoneNumber, randomTariff.Id, randomBalans, freeTerminal.Id, freePort.Id);
+                phoneExchange.CreateContract(contract, freePhoneNumber, freeTerminal, freePort);
 
                 //Выдаем абоненту терминал и порт
-                freeTerminal.Port = freePort;
-                abonent.Terminal = freeTerminal;
-
-                //Добавляем в коллеции АТС терминал и номер абонента
-                phoneExchange.allocatedPhoneNumber.Add(freePhoneNumber, freeTerminal);
-                phoneExchange.allocatedTerminals.Add(freePort, freeTerminal);
+                freeTerminal.AssignPort(freePort);
+                abonent.AssignTerminal(freeTerminal);
 
                 Console.WriteLine("Abonent " + abonent.FIO + " concluded a contract for the tariff plan " + randomTariff.Name);
                 Thread.Sleep(1000);
@@ -67,17 +67,22 @@ namespace SimulatedAutomaticTelephoneExchange
             //Исходящий вызов абонента
             randomNumberAbonent = random.Next(0, abonents.Count - 1);
             randomAbonent = abonents[randomNumberAbonent];
-            var randomNumberInterlocutor = random.Next(0, abonents.Count - 1);
-            var randomInterlocutor = abonents[randomNumberInterlocutor];
+            randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
+            randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
+            randomAbonent.OutboundСall(randomPhoneNumber);
 
-            //var randomNumberPhoneNumber = random.Next(0, phoneExchange.phoneNumbers.Count - 1);
-            //string randomPhoneNumber = phoneExchange.phoneNumbers[randomNumberPhoneNumber];
-
-            randomAbonent.OutboundСall(randomInterlocutor);
             Thread.Sleep(3000);
 
             //Завершение звонка
-            randomAbonent.EndCall();
+            var randomEndCal = random.Next(1, 2);
+            if (randomEndCal == 1)
+            {
+                randomAbonent.EndCall();
+            }
+            else
+            {
+                //randomInterlocutor.EndCall();
+            }
             Thread.Sleep(1000);
 
             //Отключение от порта телефона абонентом

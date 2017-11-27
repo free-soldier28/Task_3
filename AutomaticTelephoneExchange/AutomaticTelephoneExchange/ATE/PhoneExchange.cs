@@ -6,15 +6,20 @@ namespace AutomaticTelephoneExchange.ATE
 {
     public class PhoneExchange
     {
-        public List<Port> ports = new List<Port>();
-        public List<Terminal> terminals = new List<Terminal>();
+        private List<Contract> contracts = new List<Contract>();
+        private List<Port> ports = new List<Port>();
+        private List<Terminal> terminals = new List<Terminal>();
+
+        private static Dictionary<Port, Terminal> allocatedTerminals = new Dictionary<Port, Terminal>();
+        private static Dictionary<string, Terminal> allocatedPhoneNumber = new Dictionary<string, Terminal>();
 
         public void CreatePorts(int countPorts)
         {
             for (int i = 0; i < countPorts; i++)
             {
                 var port = new Port();
-                port.PortState += Show_Message;
+                port.PortStateEvent += Show_Message;
+                port.CallStateEvent += PortCallEvent;
                 ports.Add(port);
             }
         }
@@ -33,9 +38,13 @@ namespace AutomaticTelephoneExchange.ATE
             "51501", "51685", "51280","52889", "54113", "57160"
         };
 
-        public List<Contract> contracts = new List<Contract>();
-        public Dictionary<Port, Terminal> allocatedTerminals = new Dictionary<Port, Terminal>();
-        public Dictionary<string, Terminal> allocatedPhoneNumber = new Dictionary<string, Terminal>();
+        public void CreateContract(Contract contract, string phoneNumber, Terminal terminal, Port port)
+        {
+            contracts.Add(contract);
+
+            allocatedPhoneNumber.Add(phoneNumber, terminal);
+            allocatedTerminals.Add(port, terminal);
+        }
 
         public Port GetFreePort()
         {
@@ -90,6 +99,33 @@ namespace AutomaticTelephoneExchange.ATE
             return PhoneNumber;
         }
 
+
+        //Обрабатываем события порта вызываемого абонента
+        private static void PortCallEvent(string message, string phoneNumber)
+        {
+            Console.WriteLine(message);
+
+            Terminal terminalInterlocutor = allocatedPhoneNumber.Where(x => x.Key == phoneNumber).Select(z => z.Value).FirstOrDefault();
+            Port portInterlocutor = allocatedTerminals.Where(x => x.Value.Id == terminalInterlocutor.Id).Select(z => z.Key).FirstOrDefault();
+
+            if (portInterlocutor.ConnectionTerminal == true)
+            {
+                if (portInterlocutor.TalkState == false)
+                {
+                    portInterlocutor.IncomingCall(phoneNumber, terminalInterlocutor);
+                }
+                else
+                {
+                    Console.WriteLine("Line is busy."); //Сообщение: "Линия занята"
+                }
+            }
+            else
+            {
+                Console.WriteLine("The subscriber terminal is not connected to the port."); //Сообщение: "Терминал абонета не подключен к порту"
+            }
+        }
+
+        //Обработка событий порта вызывающего абонета
         private static void Show_Message(string message)
         {
             Console.WriteLine(message);

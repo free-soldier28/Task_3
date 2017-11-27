@@ -8,7 +8,7 @@ namespace AutomaticTelephoneExchange
         public Guid Id { get; private set; }
         public string FIO { get; private set; }
         private string PassportId { get; set; }
-        public Terminal Terminal { get; set; }
+        private Terminal Terminal { get; set; }
         
         public Abonent(string fio, string passportId)
         {
@@ -17,47 +17,29 @@ namespace AutomaticTelephoneExchange
             PassportId = passportId;
         }
 
+        public void AssignTerminal(Terminal terminal)
+        {
+            Terminal = terminal;
+        }
+
         public void ConnectTerminalToPort()
         {
-            if (Terminal.Port.ConnectionTerminal == false)
-            {
-                Terminal.Port.Connect(FIO);
-            }
-            else
-            {
-                Console.WriteLine("Warning!!! The terminal is already connected to the port.");
-            }
+            Terminal.ConnectToPort(FIO);
         }
 
         public void DisconnectTerminalToPort()
         {
-            if (Terminal.Port.ConnectionTerminal == true)
-            {
-                Terminal.Port.Disconnect(FIO);
-            }
-            else
-            {
-                Console.WriteLine("Warning!!! The terminal is already disconnected from the port.");
-            }
-            
+            Terminal.DisconnectToPort(FIO);
         }
 
-        public void OutboundСall(Abonent interlocutor)  //Исходящий вызов
+        public void OutboundСall(string phoneNumberInterlocutor)  
         {
-            if (interlocutor != null)
-            {
-                Terminal.Port.OutboundСall(FIO, interlocutor);
-            }
-            else
-            {
-                Console.WriteLine("A call can not be made. You did not enter a phone number.");
-            }
-
+            Terminal.OutboundСallToPort(FIO, phoneNumberInterlocutor);
         }
 
-        public void EndCall() //Закончить звонок
+        public void EndCall() 
         {
-            Terminal.Port.EndCall(FIO);
+            Terminal.EndCallToPort(FIO);
         }
 
     }
